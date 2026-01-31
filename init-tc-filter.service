@@ -1,0 +1,15 @@
+[Unit]
+Description=autolock
+After=multi-user.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/home/pi/HomeTelco/setup_br.sh
+ExecStop=/bin/kill -WINCH ${MAINPID}
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
