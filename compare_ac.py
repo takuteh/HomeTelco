@@ -1,9 +1,9 @@
 import get_filter_db as f_db 
 import get_filter_tc as f_tc
 
-def compare(db_filter,tc_filter):
-    add_list=[]
-    delete_list=[]
+def compare(db_filter, tc_filter):
+    add_list = []
+    delete_list = []
 
     # tcをMACキー辞書に変換
     tc_dict = {
@@ -12,6 +12,10 @@ def compare(db_filter,tc_filter):
         if 'mac_address' in t
     }
 
+    # dbのMACセットを作る
+    db_mac_set = {d['mac_address'] for d in db_filter}
+
+    # ---- DB基準チェック ----
     for db in db_filter:
         mac = db['mac_address']
 
@@ -22,13 +26,18 @@ def compare(db_filter,tc_filter):
             tc_entry = tc_dict[mac]
 
             if (db['chain'] == tc_entry['goto_chain'] and
-                db['handle'] == tc_entry['handle']
-                ):
+                db['handle'] == tc_entry['handle']):
                 print("一致：", mac)
             else:
-                delete_list.append(tc_dict)
-                add_list.append(db)
                 print("一部不一致：", mac)
+                delete_list.append(tc_entry)
+                add_list.append(db)
+
+    # ---- TCにしかないもの ----
+    for mac, tc_entry in tc_dict.items():
+        if mac not in db_mac_set:
+            print("dbに無い：", mac)
+            delete_list.append(tc_entry)
 
     return add_list, delete_list
 
