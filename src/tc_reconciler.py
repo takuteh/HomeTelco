@@ -9,6 +9,8 @@ INTERVAL = 30
 def reconciliation_loop():
     while True:
         try:
+            now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            print(f"[{now}]", flush=True)
             reconciliation()
         except Exception as e:
             print("Error in reconciler loop:", e)

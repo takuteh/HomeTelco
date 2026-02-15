@@ -1,0 +1,16 @@
+[Unit]
+Description=TC Reconciler Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/pi/HomeTelco
+ExecStart=/home/pi/venv/bin/python -u /home/pi/HomeTelco/src/tc_reconciler.py
+StandardOutput=append:/home/pi/HomeTelco/logs/tc_reconciler.log
+StandardError=append:/home/pi/HomeTelco/logs/tc_reconciler.log
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
